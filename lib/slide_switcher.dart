@@ -15,7 +15,8 @@ class SlideSwitcher extends StatefulWidget {
   final Border slidersBorder;
   final double containerBorderRadius;
   final Color containerColor;
-  final double indents; //indents between the container and the sliders (the same on all sides)
+  final double
+      indents; //indents between the container and the sliders (the same on all sides)
 
   SlideSwitcher({
     Key? key,
@@ -109,7 +110,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
           children: [
             Padding(
               padding:
-              EdgeInsets.only(left: widget.indents, right: widget.indents),
+                  EdgeInsets.only(left: widget.indents, right: widget.indents),
               child: SlideTransition(
                 position: offsetAnimation,
                 child: AnimatedContainer(
@@ -123,11 +124,13 @@ class _SlideSwitcherState extends State<SlideSwitcher>
                     borderRadius: BorderRadius.circular(sliderBorderRadius),
                     color: widget.slidersColors.isNotEmpty
                         ? index + 1 > widget.slidersColors.length
-                        ? widget.slidersColors[0]
-                        : widget.slidersColors[index]
+                            ? widget.slidersColors[0]
+                            : widget.slidersColors[index]
                         : null,
                     gradient: widget.slidersGradients.isNotEmpty
-                        ? widget.slidersGradients[index]
+                        ? index + 1 > widget.slidersGradients.length
+                            ? widget.slidersGradients[0]
+                            : widget.slidersGradients[index]
                         : null,
                   ),
                 ),
@@ -135,11 +138,11 @@ class _SlideSwitcherState extends State<SlideSwitcher>
             ),
             Padding(
               padding:
-              EdgeInsets.only(left: widget.indents, right: widget.indents),
+                  EdgeInsets.only(left: widget.indents, right: widget.indents),
               child: Row(
                 children: List.generate(
                   widget.slidersChild.length,
-                      (rowIndex) => Row(
+                  (rowIndex) => Row(
                     children: [
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
