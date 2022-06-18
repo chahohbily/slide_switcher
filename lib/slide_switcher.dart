@@ -5,18 +5,30 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class SlideSwitcher extends StatefulWidget {
-  final List<Widget> slidersChild; //Widgets placed inside sliders
-  final StreamController<int> streamController; //Controller responsible for getting the index information of the focused slider
-  final double containerHeight; //Container height
-  final double containerWight; //Container width
-  final List<Color> slidersColors; //The color of each slider. A single color in the array will fill all sliders
-  final List<LinearGradient> slidersGradients; //The gradient of each slider. A single gradient in the array will fill all sliders
-  final Border containerBorder; //Container frame widget
-  final Border slidersBorder; //Slider frame widget
-  final double containerBorderRadius; //Container corner rounding radius
-  final Color containerColor; //Container fill color
-  final double indents; //Indents between the container and the sliders (the same on all sides)
+  ///Widgets that placed inside sliders
+  final List<Widget> slidersChild;
+  ///Controller responsible for getting the index information of the focused slider
+  final StreamController<int> streamController;
+  ///Container height
+  final double containerHeight;
+  ///Container width
+  final double containerWight;
+  ///The color of each slider. A single color in the array will fill all sliders
+  final List<Color> slidersColors;
+  ///The gradient of each slider. A single gradient in the array will fill all sliders
+  final List<LinearGradient> slidersGradients;
+  ///Container border widget
+  final Border containerBorder;
+  ///Slider border widget
+  final Border slidersBorder;
+  ///Container corner rounding radius
+  final double containerBorderRadius;
+  ///Container fill color
+  final Color containerColor;
+  ///Indents between the container and the sliders (the same on all sides)
+  final double indents;
 
+  ///A class for creating sliders
   const SlideSwitcher({
     Key? key,
     required this.slidersChild,
