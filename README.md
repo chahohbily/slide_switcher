@@ -6,7 +6,7 @@
 
 Here are some examples of the library's features:
 
-![](.github/switchers_example.gif)
+![https://yandex.ru/images/search?text=aboba&from=tabbar&pos=14&rpt=simage&img_url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FtNO15EOjuxs%2Fmaxresdefault.jpg&lr=67](.github/switchers_example.gif)
 
 ## List and description of the functionality:
 

@@ -18,7 +18,7 @@ class SlideSwitcher extends StatefulWidget {
   final double
       indents; //indents between the container and the sliders (the same on all sides)
 
-  SlideSwitcher({
+  const SlideSwitcher({
     Key? key,
     required this.slidersChild,
     required this.containerHeight,
@@ -27,9 +27,9 @@ class SlideSwitcher extends StatefulWidget {
     this.containerBorder = const Border(),
     this.slidersBorder = const Border(),
     this.indents = 0,
-    this.slidersColors = const [],
+    this.slidersColors = const [Colors.white],
     this.slidersGradients = const [],
-    this.containerColor = Colors.white,
+    this.containerColor = Colors.grey,
     this.containerBorderRadius = 1000,
   }) : super(key: key);
 
@@ -122,7 +122,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
                   decoration: BoxDecoration(
                     border: widget.slidersBorder,
                     borderRadius: BorderRadius.circular(sliderBorderRadius),
-                    color: widget.slidersColors.isNotEmpty
+                    color: widget.slidersGradients.isEmpty
                         ? index + 1 > widget.slidersColors.length
                             ? widget.slidersColors[0]
                             : widget.slidersColors[index]
@@ -170,7 +170,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
                             _controller.forward();
                           }
                         },
-                        child: Container(
+                        child: SizedBox(
                           height: widget.containerHeight,
                           width: slidersWight,
                           child: Center(
