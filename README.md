@@ -61,3 +61,5 @@ StreamBuilder<int>(
 
 snapshot.data will store the index of the current slider.
 You can see more details in the Example tab
+
+[Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)
