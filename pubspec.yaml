@@ -1,7 +1,7 @@
 name: slide_switcher
 description: Package for creating switching widgets
 version: 0.0.1
-homepage:
+repository: https://github.com/chahohbily/slide_switcher
 
 environment:
   sdk: ">=2.16.2 <3.0.0"

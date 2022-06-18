@@ -5,18 +5,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class SlideSwitcher extends StatefulWidget {
-  final List<Widget> slidersChild;
-  final StreamController<int> streamController;
-  final double containerHeight;
-  final double containerWight;
-  final List<Color> slidersColors;
-  final List<LinearGradient> slidersGradients;
-  final Border containerBorder;
-  final Border slidersBorder;
-  final double containerBorderRadius;
-  final Color containerColor;
-  final double
-      indents; //indents between the container and the sliders (the same on all sides)
+  final List<Widget> slidersChild; //Widgets placed inside sliders
+  final StreamController<int> streamController; //Controller responsible for getting the index information of the focused slider
+  final double containerHeight; //Container height
+  final double containerWight; //Container width
+  final List<Color> slidersColors; //The color of each slider. A single color in the array will fill all sliders
+  final List<LinearGradient> slidersGradients; //The gradient of each slider. A single gradient in the array will fill all sliders
+  final Border containerBorder; //Container frame widget
+  final Border slidersBorder; //Slider frame widget
+  final double containerBorderRadius; //Container corner rounding radius
+  final Color containerColor; //Container fill color
+  final double indents; //Indents between the container and the sliders (the same on all sides)
 
   const SlideSwitcher({
     Key? key,
