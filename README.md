@@ -1,6 +1,6 @@
 ## Library for creating and customizing sliders
 
-[Русский README.md](README.re.md)
+[Русский README.md](README.ru.md)
 
 ## Widget customization variations
 
@@ -29,3 +29,35 @@ The library lets you change the style of containers and sliders using the fields
 | containerBorderRadius | container corner rounding radius |
 | containerColor | container fill color / grey by default |
 | indents | indents between the container and sliders (the same on all sides) / 0 by default |
+
+## Creating your slider
+
+First, you need to create a StreamController that will contain the index of the current slider.
+It can be used to change screen elements depending on which slider is selected.
+
+...
+final StreamController<int> ctrl = StreamController<int>();
+...
+
+To make changes to screen elements work correctly, you need to wrap the necessary screen elements in StreamBuilder
+
+...
+StreamBuilder<int>(
+   stream: ctrl.stream,
+   initialData: 0,
+    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+       return SlideSwitcher(
+       slidersChild: [
+         Text('First'),
+         Text('Second'),
+       ],
+       streamController: ctrl,
+       containerHeight: 40,
+       containerWight: 350,
+       );
+    },
+),
+...
+
+snapshot.data will store the index of the current slider.
+You can see more details in the Example tab

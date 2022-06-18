@@ -13,20 +13,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white10.withOpacity(0.27),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -36,6 +31,15 @@ class _MyHomePageState extends State<MyHomePage> {
   final StreamController<int> ctrl1 = StreamController<int>();
   final StreamController<int> ctrl2 = StreamController<int>();
   final StreamController<int> ctrl3 = StreamController<int>();
+
+  @override
+  void dispose() {
+    ctrl.close();
+    ctrl1.close();
+    ctrl2.close();
+    ctrl3.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

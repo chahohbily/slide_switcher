@@ -25,3 +25,35 @@
 | containerBorderRadius | Радиус закругления углов контейнера |
 | containerColor        | Цвет заливки контейнера / серые по умолчанию |
 | indents               | отступы между контейнером и слайдерами (одинаковые со всех сторон) / 0 по умолчанию |
+
+## Создание своего слайдера
+
+Для начала необходимо создать StreamController, который будет содержать индекс текущего слайдера.
+Он может быть использован для изменения элементов экрана в зависимости от того, какой слацйдер выбран.
+
+...
+final StreamController<int> ctrl = StreamController<int>();
+...
+
+Для корректной работы изменения элементов экрана нужно обернуть необходимые элементы экрана в StreamBuilder
+
+...
+StreamBuilder<int>(
+   stream: ctrl.stream,
+   initialData: 0,
+    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+       return SlideSwitcher(
+       slidersChild: [
+         Text('First'),
+         Text('Second'),
+       ],
+       streamController: ctrl,
+       containerHeight: 40,
+       containerWight: 350,
+       );
+    },
+),
+...
+
+snapshot.data будет хранить в себе индекс текущего слайдера.
+Подробнее можно посмотреть во вкладке Example
