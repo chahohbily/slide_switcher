@@ -1,4 +1,4 @@
-## Library for creating and customizing sliders
+# Library for creating and customizing sliders
 
 [Русский README.md](README.ru.md)
 
