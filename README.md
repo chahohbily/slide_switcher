@@ -35,13 +35,13 @@ The library lets you change the style of containers and sliders using the fields
 First, you need to create a StreamController that will contain the index of the current slider.
 It can be used to change screen elements depending on which slider is selected.
 
-...
+```
 final StreamController<int> ctrl = StreamController<int>();
-...
+```
 
 To make changes to screen elements work correctly, you need to wrap the necessary screen elements in StreamBuilder
 
-...
+```
 StreamBuilder<int>(
    stream: ctrl.stream,
    initialData: 0,
@@ -57,7 +57,7 @@ StreamBuilder<int>(
        );
     },
 ),
-...
+```
 
 snapshot.data will store the index of the current slider.
 You can see more details in the Example tab
