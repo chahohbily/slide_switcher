@@ -1,6 +1,6 @@
 name: slide_switcher
-description: Package for creating switching widgets
-version: 0.0.1
+description: Package for creating switching widgets with extensive customization options
+version: 1.0.0
 repository: https://github.com/chahohbily/slide_switcher
 
 environment:
