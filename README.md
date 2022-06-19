@@ -42,14 +42,14 @@ you should use the optional parameters from the table above.
 
 ```
 SlideSwitcher(
-              children: [
-                Text('First'),
-                Text('Second',),
-              ],
-              onSelect: (index) {},
-              containerHeight: 40,
-              containerWight: 350,
-            ),
+  children: [
+    Text('First'),
+    Text('Second'),
+  ],
+  onSelect: (index) {},
+  containerHeight: 40,
+  containerWight: 350,
+),
 ```
 
 To change the state of the screen it is recommended to create a variable storing the index of the current slider and call its setState
@@ -59,23 +59,25 @@ in the onSelect function
 int switcherIndex1 = 0;
 
 Column(
-          children: [
-            SlideSwitcher(
-              children: [
-                Text('First'),
-                Text('Second'),
-              ],
-              onSelect: (index) => setState(() => switcherIndex1 = index),
-              containerHeight: 40,
-              containerWight: 350,
-            ),
-            const SizedBox(height: 20),
-            if (switcherIndex1 == 0) ...[
-              Container(height: 100, width: 100, color: Colors.red,)
-            ]
-            else ...[
-              Container(height: 100, width: 100, color: Colors.green,)
-            ],
+  children: [
+    SlideSwitcher(
+      children: [
+        Text('First'),
+        Text('Second'),
+      ],
+      onSelect: (index) => setState(() => switcherIndex1 = index),
+      containerHeight: 40,
+      containerWight: 350,
+    ),
+    const SizedBox(height: 20),
+    if (switcherIndex1 == 0) ...[
+      Container(height: 100, width: 100, color: Colors.red,)
+    ]
+    else ...[
+      Container(height: 100, width: 100, color: Colors.green,)
+    ],
+  ],
+),
 ```
 
 [Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)

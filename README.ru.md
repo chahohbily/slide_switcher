@@ -38,14 +38,14 @@ containerHeight - высота контейнера; containerWight - ширин
 
 ```
 SlideSwitcher(
-              children: [
-                Text('First'),
-                Text('Second',),
-              ],
-              onSelect: (index) {},
-              containerHeight: 40,
-              containerWight: 350,
-            ),
+  children: [
+    Text('First'),
+    Text('Second'),
+  ],
+  onSelect: (index) {},
+  containerHeight: 40,
+  containerWight: 350,
+),
 ```
 
 Для смены состояния экрана рекомендуется создать переменную, хранящую индекс текущего слайдера и вызывать ее setState
@@ -55,23 +55,25 @@ SlideSwitcher(
 int switcherIndex1 = 0;
 
 Column(
-          children: [
-            SlideSwitcher(
-              children: [
-                Text('First'),
-                Text('Second'),
-              ],
-              onSelect: (index) => setState(() => switcherIndex1 = index),
-              containerHeight: 40,
-              containerWight: 350,
-            ),
-            const SizedBox(height: 20),
-            if (switcherIndex1 == 0) ...[
-              Container(height: 100, width: 100, color: Colors.red,)
-            ]
-            else ...[
-              Container(height: 100, width: 100, color: Colors.green,)
-            ],
+  children: [
+    SlideSwitcher(
+      children: [
+        Text('First'),
+        Text('Second'),
+      ],
+      onSelect: (index) => setState(() => switcherIndex1 = index),
+      containerHeight: 40,
+      containerWight: 350,
+    ),
+    const SizedBox(height: 20),
+    if (switcherIndex1 == 0) ...[
+      Container(height: 100, width: 100, color: Colors.red,)
+    ]
+    else ...[
+      Container(height: 100, width: 100, color: Colors.green,)
+    ],
+  ],
+),
 ```
 
 [Google форма для пожеланий и предложений по пакету](https://forms.gle/3Hghayy4yTnj1mjt7)
