@@ -19,7 +19,7 @@ The library lets you change the style of containers and sliders using the fields
 | Fields           | Description                                   |
 | ---------------- |:---------------------------------------------:|
 | slidersChild     | Widgets that placed inside sliders / required |
-| streamController | Controller responsible for getting the index information of the focused slider / required |
+| onSelect | The function takes an index variable that changes depending on the index of the current slider / required|
 | containerHeight | Container height / required |
 | containerWight | Container width / required |
 | slidersColors | The color of each slider. A single color in the array will fill all sliders / white by default |
@@ -30,36 +30,52 @@ The library lets you change the style of containers and sliders using the fields
 | containerColor | Container fill color / grey by default |
 | indents | Indents between the container and sliders (the same on all sides) / 0 by default |
 
-## Creating your slider
+## Creating your own SlideSwitcher
 
-First, you need to create a StreamController that will contain the index of the current slider.
-It can be used to change screen elements depending on which slider is selected.
+SlideSwitcher is an ordinary widget. In order to create it you have to specify the obligatory parameters:
+children - texts, icons, pictures and any other widgets that will be stored in the sliders;
+onSelect - the function which will be executed during the change of the focused slider;
+containerHeight - container height; containerWight - container width. To customize the widget
+you should use the optional parameters from the table above.
+
+#### Minimum functionality:
 
 ```
-final StreamController<int> ctrl = StreamController<int>();
+SlideSwitcher(
+              children: [
+                Text('First'),
+                Text('Second',),
+              ],
+              onSelect: (index) {},
+              containerHeight: 40,
+              containerWight: 350,
+            ),
 ```
 
-To make changes to screen elements work correctly, you need to wrap the necessary screen elements in StreamBuilder
+To change the state of the screen it is recommended to create a variable storing the index of the current slider and call its setState
+in the onSelect function
 
 ```
-StreamBuilder<int>(
-   stream: ctrl.stream,
-   initialData: 0,
-    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-       return SlideSwitcher(
-       slidersChild: [
-         Text('First'),
-         Text('Second'),
-       ],
-       streamController: ctrl,
-       containerHeight: 40,
-       containerWight: 350,
-       );
-    },
-),
-```
+int switcherIndex1 = 0;
 
-snapshot.data will store the index of the current slider.
-You can see more details in the Example tab
+Column(
+          children: [
+            SlideSwitcher(
+              children: [
+                Text('First'),
+                Text('Second'),
+              ],
+              onSelect: (index) => setState(() => switcherIndex1 = index),
+              containerHeight: 40,
+              containerWight: 350,
+            ),
+            const SizedBox(height: 20),
+            if (switcherIndex1 == 0) ...[
+              Container(height: 100, width: 100, color: Colors.red,)
+            ]
+            else ...[
+              Container(height: 100, width: 100, color: Colors.green,)
+            ],
+```
 
 [Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)

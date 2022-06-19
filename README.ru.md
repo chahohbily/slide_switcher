@@ -14,8 +14,8 @@
 
 | Поля                  | Описание                                         |
 | --------------------- |:------------------------------------------------:|
-| slidersChild          | Виджеты, помещаемые внутри слайдеров / обязательный |
-| streamController      | Контроллер, ответственный за получение информации индекса сфокусированного слайдера / обязательный|
+| children              | Виджеты, помещаемые внутри слайдеров / обязательный |
+| onSelect              | Функция принимает переменную index, которая меняется в зависимости от индекса текущего слайдера / обязательная|
 | containerHeight       | Высота контейнера / обязательный |
 | containerWight        | Ширина контейнера / обязательный |
 | slidersColors         | Цвет каждого слайдера. Единственный цвет в массиве заполнит все слайдеры / белые по умолчанию |
@@ -26,34 +26,52 @@
 | containerColor        | Цвет заливки контейнера / серые по умолчанию |
 | indents               | Отступы между контейнером и слайдерами (одинаковые со всех сторон) / 0 по умолчанию |
 
-## Создание своего слайдера
+## Создание своего SlideSwitcher
 
-Для начала необходимо создать StreamController, который будет содержать индекс текущего слайдера.
-Он может быть использован для изменения элементов экрана в зависимости от того, какой слацйдер выбран.
+SlideSwitcher - это обычный виджет. Для его создания вам необходимо прописать обязательные параметры:
+children - текста, иконки, картинки и любые другие виджеты, которые будут храниться в слайдерах;
+onSelect - функция, которая выполняется во время смены фокусированного слайдера;
+containerHeight - высота контейнера; containerWight - ширина контейнера. Для кастомизации виджета
+вам необходимо воспользоваться необязательными параметрами из таблицы выше.
+
+#### Минимальный функционал:
 
 ```
-final StreamController<int> ctrl = StreamController<int>();
+SlideSwitcher(
+              children: [
+                Text('First'),
+                Text('Second',),
+              ],
+              onSelect: (index) {},
+              containerHeight: 40,
+              containerWight: 350,
+            ),
 ```
 
-Для корректной работы изменения элементов экрана нужно обернуть необходимые элементы экрана в StreamBuilder
+Для смены состояния экрана рекомендуется создать переменную, хранящую индекс текущего слайдера и вызывать ее setState
+в функции onSelect
 
 ```
-StreamBuilder<int>(
-   stream: ctrl.stream,
-   initialData: 0,
-    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-       return SlideSwitcher(
-       slidersChild: [
-         Text('First'),
-         Text('Second'),
-       ],
-       streamController: ctrl,
-       containerHeight: 40,
-       containerWight: 350,
-       );
-    },
-),
+int switcherIndex1 = 0;
+
+Column(
+          children: [
+            SlideSwitcher(
+              children: [
+                Text('First'),
+                Text('Second'),
+              ],
+              onSelect: (index) => setState(() => switcherIndex1 = index),
+              containerHeight: 40,
+              containerWight: 350,
+            ),
+            const SizedBox(height: 20),
+            if (switcherIndex1 == 0) ...[
+              Container(height: 100, width: 100, color: Colors.red,)
+            ]
+            else ...[
+              Container(height: 100, width: 100, color: Colors.green,)
+            ],
 ```
 
-snapshot.data будет хранить в себе индекс текущего слайдера.
-Подробнее можно посмотреть во вкладке Example
+[Google форма для пожеланий и предложений по пакету](https://forms.gle/3Hghayy4yTnj1mjt7)

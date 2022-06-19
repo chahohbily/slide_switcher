@@ -1,40 +1,48 @@
 library slide_switcher;
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class SlideSwitcher extends StatefulWidget {
   ///Widgets that placed inside sliders
-  final List<Widget> slidersChild;
-  ///Controller responsible for getting the index information of the focused slider
-  final StreamController<int> streamController;
+  final List<Widget> children;
+
+  ///The function takes an index variable, which varies depending on the index of the current slider
+  final void Function(int index) onSelect;
+
   ///Container height
   final double containerHeight;
+
   ///Container width
   final double containerWight;
+
   ///The color of each slider. A single color in the array will fill all sliders
   final List<Color> slidersColors;
+
   ///The gradient of each slider. A single gradient in the array will fill all sliders
   final List<LinearGradient> slidersGradients;
+
   ///Container border widget
   final Border containerBorder;
+
   ///Slider border widget
   final Border slidersBorder;
+
   ///Container corner rounding radius
   final double containerBorderRadius;
+
   ///Container fill color
   final Color containerColor;
+
   ///Indents between the container and the sliders (the same on all sides)
   final double indents;
 
   ///A class for creating sliders
   const SlideSwitcher({
     Key? key,
-    required this.slidersChild,
+    required this.children,
     required this.containerHeight,
     required this.containerWight,
-    required this.streamController,
+    required this.onSelect,
     this.containerBorder = const Border(),
     this.slidersBorder = const Border(),
     this.indents = 0,
@@ -71,12 +79,6 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     ),
   );
 
-  @override
-  void dispose() {
-    widget.streamController.close();
-    super.dispose();
-  }
-
   //todo vertical slide, check on another devices
 
   @override
@@ -94,10 +96,10 @@ class _SlideSwitcherState extends State<SlideSwitcher>
 
       slidersWight =
           (widget.containerWight - widget.indents * 2 - containerBorderWight) /
-              widget.slidersChild.length;
+              widget.children.length;
     } else {
       slidersWight = (widget.containerWight - containerBorderWight) /
-          widget.slidersChild.length;
+          widget.children.length;
 
       sliderBorderRadius = (widget.containerHeight - containerBorderWight) *
           (widget.containerBorderRadius / widget.containerHeight);
@@ -107,95 +109,92 @@ class _SlideSwitcherState extends State<SlideSwitcher>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: widget.containerHeight,
-        width: widget.containerWight,
-        decoration: BoxDecoration(
-          color: widget.containerColor,
-          borderRadius: BorderRadius.circular(widget.containerBorderRadius),
-          border: widget.containerBorder,
-        ),
-        child: Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            Padding(
-              padding:
-                  EdgeInsets.only(left: widget.indents, right: widget.indents),
-              child: SlideTransition(
-                position: offsetAnimation,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  height: widget.containerHeight -
-                      widget.indents * 2 -
-                      containerBorderHeight,
-                  width: slidersWight,
-                  decoration: BoxDecoration(
-                    border: widget.slidersBorder,
-                    borderRadius: BorderRadius.circular(sliderBorderRadius),
-                    color: widget.slidersGradients.isEmpty
-                        ? index + 1 > widget.slidersColors.length
-                            ? widget.slidersColors[0]
-                            : widget.slidersColors[index]
-                        : null,
-                    gradient: widget.slidersGradients.isNotEmpty
-                        ? index + 1 > widget.slidersGradients.length
-                            ? widget.slidersGradients[0]
-                            : widget.slidersGradients[index]
-                        : null,
-                  ),
+    return Container(
+      height: widget.containerHeight,
+      width: widget.containerWight,
+      decoration: BoxDecoration(
+        color: widget.containerColor,
+        borderRadius: BorderRadius.circular(widget.containerBorderRadius),
+        border: widget.containerBorder,
+      ),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.only(left: widget.indents, right: widget.indents),
+            child: SlideTransition(
+              position: offsetAnimation,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                height: widget.containerHeight -
+                    widget.indents * 2 -
+                    containerBorderHeight,
+                width: slidersWight,
+                decoration: BoxDecoration(
+                  border: widget.slidersBorder,
+                  borderRadius: BorderRadius.circular(sliderBorderRadius),
+                  color: widget.slidersGradients.isEmpty
+                      ? index + 1 > widget.slidersColors.length
+                          ? widget.slidersColors[0]
+                          : widget.slidersColors[index]
+                      : null,
+                  gradient: widget.slidersGradients.isNotEmpty
+                      ? index + 1 > widget.slidersGradients.length
+                          ? widget.slidersGradients[0]
+                          : widget.slidersGradients[index]
+                      : null,
                 ),
               ),
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(left: widget.indents, right: widget.indents),
-              child: Row(
-                children: List.generate(
-                  widget.slidersChild.length,
-                  (rowIndex) => Row(
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          lastIndex = index;
-                          widget.streamController.sink.add(rowIndex);
-                          setState(() {
-                            index = rowIndex;
-                          });
-                          if (widget.slidersChild.length == 2) {
-                            index == 1
-                                ? _controller.forward()
-                                : _controller.reverse();
-                          } else {
-                            offsetAnimation = Tween<Offset>(
-                              begin: Offset(lastIndex.toDouble(), 0.0),
-                              end: Offset(index.toDouble(), 0.0),
-                            ).animate(
-                              CurvedAnimation(
-                                parent: _controller,
-                                curve: Curves.linear,
-                              ),
-                            );
-                            _controller.reset();
-                            _controller.forward();
-                          }
-                        },
-                        child: SizedBox(
-                          height: widget.containerHeight,
-                          width: slidersWight,
-                          child: Center(
-                            child: widget.slidersChild[rowIndex],
-                          ),
+          ),
+          Padding(
+            padding:
+                EdgeInsets.only(left: widget.indents, right: widget.indents),
+            child: Row(
+              children: List.generate(
+                widget.children.length,
+                (rowIndex) => Row(
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        lastIndex = index;
+                        index = rowIndex;
+                        setState(() {});
+                        widget.onSelect(index);
+                        if (widget.children.length == 2) {
+                          index == 1
+                              ? _controller.forward()
+                              : _controller.reverse();
+                        } else {
+                          offsetAnimation = Tween<Offset>(
+                            begin: Offset(lastIndex.toDouble(), 0.0),
+                            end: Offset(index.toDouble(), 0.0),
+                          ).animate(
+                            CurvedAnimation(
+                              parent: _controller,
+                              curve: Curves.linear,
+                            ),
+                          );
+                          _controller.reset();
+                          _controller.forward();
+                        }
+                      },
+                      child: SizedBox(
+                        height: widget.containerHeight,
+                        width: slidersWight,
+                        child: Center(
+                          child: widget.children[rowIndex],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
