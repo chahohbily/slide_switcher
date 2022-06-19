@@ -67,7 +67,7 @@ Column(
         Text('First'),
         Text('Second'),
       ],
-      onSelect: (index) => setState(() => switcherIndex1 = index),
+      ***onSelect: (index) => setState(() => switcherIndex1 = index),***
       containerHeight: 40,
       containerWight: 350,
     ),
