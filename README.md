@@ -8,6 +8,8 @@ Here are some examples of the library's features:
 
 ![](.github/switchers_example.gif)
 
+***The description of the library is only valid for its latest version***
+
 ## First I suggest you get familiar with what container and sliders are in the library
 
 ![](.github/container_sliders.png)
