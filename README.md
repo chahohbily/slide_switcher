@@ -86,7 +86,7 @@ Column(
 ),
 ```
 
-#### NEW
+# NEW
 ## Vertical Switchers.
 
 The direction parameter of this library is responsible for the direction of the switch's movement.
