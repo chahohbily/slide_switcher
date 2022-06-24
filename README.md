@@ -122,6 +122,6 @@ SlideSwitcher(
 ),
 ```
 
-![](.github/switch_on.png)
+![](.github/switch_on.png) ![](.github/switch_off.png)
 
 [Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)

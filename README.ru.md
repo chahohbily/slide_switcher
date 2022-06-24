@@ -117,6 +117,6 @@ SlideSwitcher(
 ),
 ```
 
-![](.github/switch_on.png)
+![](.github/switch_on.png) ![](.github/switch_off.png)
 
 [Google форма для пожеланий и предложений по пакету](https://forms.gle/3Hghayy4yTnj1mjt7)
