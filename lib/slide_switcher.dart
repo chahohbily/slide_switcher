@@ -36,6 +36,12 @@ class SlideSwitcher extends StatefulWidget {
   ///Indents between the container and the sliders (the same on all sides)
   final double indents;
 
+  ///Defining the direction of the slider swipe
+  final Axis direction;
+
+  ///A shadow cast by a box
+  final List<BoxShadow> containerBoxShadow;
+
   ///A class for creating sliders
   const SlideSwitcher({
     Key? key,
@@ -50,6 +56,8 @@ class SlideSwitcher extends StatefulWidget {
     this.slidersGradients = const [],
     this.containerColor = Colors.grey,
     this.containerBorderRadius = 1000,
+    this.direction = Axis.horizontal,
+    this.containerBoxShadow = const [],
   }) : super(key: key);
 
   @override
@@ -59,7 +67,8 @@ class SlideSwitcher extends StatefulWidget {
 class _SlideSwitcherState extends State<SlideSwitcher>
     with SingleTickerProviderStateMixin {
   late final double sliderBorderRadius;
-  late final double slidersWight;
+  late final double slidersLongSide;
+  late final double slidersShortSide;
   late final double containerBorderHeight;
   late final double containerBorderWight;
   int index = 0;
@@ -71,15 +80,15 @@ class _SlideSwitcherState extends State<SlideSwitcher>
   );
   late Animation<Offset> offsetAnimation = Tween<Offset>(
     begin: const Offset(0.0, 0.0),
-    end: const Offset(1.0, 0.0),
+    end: widget.direction == Axis.horizontal
+        ? const Offset(1.0, 0.0)
+        : const Offset(0.0, 1.0),
   ).animate(
     CurvedAnimation(
       parent: _controller,
       curve: Curves.linear,
     ),
   );
-
-  //todo vertical slide, check on another devices
 
   @override
   void initState() {
@@ -94,46 +103,66 @@ class _SlideSwitcherState extends State<SlideSwitcher>
           (widget.containerHeight - widget.indents - containerBorderWight) *
               (widget.containerBorderRadius / widget.containerHeight);
 
-      slidersWight =
-          (widget.containerWight - widget.indents * 2 - containerBorderWight) /
+      slidersLongSide = widget.direction == Axis.horizontal
+          ? (widget.containerWight -
+                  widget.indents * 2 -
+                  containerBorderWight) /
+              widget.children.length
+          : (widget.containerHeight -
+                  widget.indents * 2 -
+                  containerBorderHeight) /
               widget.children.length;
     } else {
-      slidersWight = (widget.containerWight - containerBorderWight) /
-          widget.children.length;
+      slidersLongSide = widget.direction == Axis.horizontal
+          ? (widget.containerWight - containerBorderWight) /
+              widget.children.length
+          : (widget.containerHeight - containerBorderHeight) /
+              widget.children.length;
 
       sliderBorderRadius = (widget.containerHeight - containerBorderWight) *
           (widget.containerBorderRadius / widget.containerHeight);
     }
+
+    slidersShortSide = widget.direction == Axis.horizontal
+        ? widget.containerHeight - widget.indents * 2 - containerBorderHeight
+        : widget.containerWight - widget.indents * 2 - containerBorderWight;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.containerHeight,
-      width: widget.containerWight,
+      height: widget.children.isEmpty ? 0 : widget.containerHeight,
+      width: widget.children.isEmpty ? 0 : widget.containerWight,
       decoration: BoxDecoration(
         color: widget.containerColor,
         borderRadius: BorderRadius.circular(widget.containerBorderRadius),
         border: widget.containerBorder,
+        boxShadow: widget.containerBoxShadow,
       ),
       child: Stack(
-        alignment: Alignment.centerLeft,
+        alignment: widget.direction == Axis.horizontal
+            ? Alignment.centerLeft
+            : Alignment.topCenter,
         children: [
           Padding(
-            padding:
-                EdgeInsets.only(left: widget.indents, right: widget.indents),
+            padding: widget.direction == Axis.horizontal
+                ? EdgeInsets.symmetric(horizontal: widget.indents)
+                : EdgeInsets.symmetric(vertical: widget.indents),
             child: SlideTransition(
               position: offsetAnimation,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                height: widget.containerHeight -
-                    widget.indents * 2 -
-                    containerBorderHeight,
-                width: slidersWight,
+                height: widget.direction == Axis.vertical
+                    ? slidersLongSide
+                    : slidersShortSide,
+                width: widget.direction == Axis.horizontal
+                    ? slidersLongSide
+                    : slidersShortSide,
                 decoration: BoxDecoration(
                   border: widget.slidersBorder,
-                  borderRadius: BorderRadius.circular(sliderBorderRadius),
+                  borderRadius: makingBorder(index),
                   color: widget.slidersGradients.isEmpty
                       ? index + 1 > widget.slidersColors.length
                           ? widget.slidersColors[0]
@@ -149,53 +178,94 @@ class _SlideSwitcherState extends State<SlideSwitcher>
             ),
           ),
           Padding(
-            padding:
-                EdgeInsets.only(left: widget.indents, right: widget.indents),
-            child: Row(
+            padding: widget.direction == Axis.horizontal
+                ? EdgeInsets.symmetric(horizontal: widget.indents)
+                : EdgeInsets.symmetric(vertical: widget.indents),
+            child: Flex(
+              direction: widget.direction,
               children: List.generate(
                 widget.children.length,
-                (rowIndex) => Row(
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        lastIndex = index;
-                        index = rowIndex;
-                        setState(() {});
-                        widget.onSelect(index);
-                        if (widget.children.length == 2) {
-                          index == 1
-                              ? _controller.forward()
-                              : _controller.reverse();
-                        } else {
-                          offsetAnimation = Tween<Offset>(
-                            begin: Offset(lastIndex.toDouble(), 0.0),
-                            end: Offset(index.toDouble(), 0.0),
-                          ).animate(
-                            CurvedAnimation(
-                              parent: _controller,
-                              curve: Curves.linear,
-                            ),
-                          );
-                          _controller.reset();
-                          _controller.forward();
-                        }
-                      },
-                      child: SizedBox(
-                        height: widget.containerHeight,
-                        width: slidersWight,
-                        child: Center(
-                          child: widget.children[rowIndex],
-                        ),
+                (rowIndex) => GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    lastIndex = index;
+                    index = rowIndex;
+                    setState(() {});
+                    widget.onSelect(index);
+                    if (widget.children.length == 2) {
+                      index == 1
+                          ? _controller.forward()
+                          : _controller.reverse();
+                    } else {
+                      if (widget.direction == Axis.horizontal) {
+                        offsetAnimation = Tween<Offset>(
+                          begin: Offset(lastIndex.toDouble(), 0.0),
+                          end: Offset(index.toDouble(), 0.0),
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Curves.linear,
+                          ),
+                        );
+                      } else {
+                        offsetAnimation = Tween<Offset>(
+                          begin: Offset(0.0, lastIndex.toDouble()),
+                          end: Offset(0.0, index.toDouble()),
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Curves.linear,
+                          ),
+                        );
+                      }
+                      _controller.reset();
+                      _controller.forward();
+                    }
+                  },
+                  child: SizedBox(
+                    height: widget.direction == Axis.vertical
+                        ? slidersLongSide
+                        : slidersShortSide,
+                    width: widget.direction == Axis.horizontal
+                        ? slidersLongSide
+                        : slidersShortSide,
+                    child: SizedBox(
+                      child: Center(
+                        child: widget.children[rowIndex],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  BorderRadius makingBorder(int index) {
+    bool verticalBadSize = widget.direction == Axis.vertical &&
+            widget.containerHeight < widget.containerWight * 2
+        ? true
+        : false;
+    bool horizontalBadSize = widget.direction == Axis.horizontal &&
+            widget.containerHeight * 2 > widget.containerWight
+        ? true
+        : false;
+    return BorderRadius.only(
+      bottomLeft: index == 0 && verticalBadSize || index == widget.children.length - 1 && horizontalBadSize
+          ? Radius.zero
+          : Radius.circular(sliderBorderRadius),
+      bottomRight: index == 0 && (verticalBadSize || horizontalBadSize)
+          ? Radius.zero
+          : Radius.circular(sliderBorderRadius),
+      topLeft: index == widget.children.length - 1 && verticalBadSize || index == widget.children.length - 1 && horizontalBadSize
+          ? Radius.zero
+          : Radius.circular(sliderBorderRadius),
+      topRight: index == widget.children.length - 1 && verticalBadSize || index == 0 && horizontalBadSize
+          ? Radius.zero
+          : Radius.circular(sliderBorderRadius),
     );
   }
 }
