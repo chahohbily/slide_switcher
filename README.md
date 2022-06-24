@@ -87,7 +87,7 @@ Column(
 ```
 
 #### NEW
-##Vertical Switchers.
+## Vertical Switchers.
 
 The direction parameter of this library is responsible for the direction of the switch's movement.
 Just add ***direction: Axis.vertical*** to your widget:
@@ -105,7 +105,9 @@ SlideSwitcher(
 ),
 ```
 
-##Empty Switchers
+## Empty Switchers
+
+![](.github/switch_on.png)
 
 If you need a switcher with two children to define whether something is on or off, then
 add empty containers to the children parameters:
@@ -121,7 +123,5 @@ SlideSwitcher(
   containerWight: 60,
 ),
 ```
-
-![](.github/switch_on.png)
 
 [Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)
