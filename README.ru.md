@@ -2,7 +2,7 @@
 
 Ниже приведены примеры возможностей библиотеки:
 
-![](.github/switchers_example.gif) ![](.github/switchers_example.gif)
+![](.github/switchers_example.gif)
 
 ***Важно! Описание библиотеки актуально только для ее последней версии***
 
@@ -27,6 +27,8 @@
 | containerBorderRadius | Радиус закругления углов контейнера |
 | containerColor        | Цвет заливки контейнера / серые по умолчанию |
 | indents               | Отступы между контейнером и слайдерами (одинаковые со всех сторон) / 0 по умолчанию |
+| direction             | Определение направления свайпа слайдера |
+| containerBoxShadow    | Тень, отбрасываемая контейнером |
 
 ## Создание своего SlideSwitcher
 
@@ -49,6 +51,8 @@ SlideSwitcher(
   containerWight: 350,
 ),
 ```
+
+***Следите, чтобы параметры containerHeight и containerWight соответствовали движениям свайпа, иначе возможна реализация, в которой слайдеры выходят за границы контейнера***
 
 Для смены состояния экрана рекомендуется создать переменную, хранящую индекс текущего слайдера и вызывать ее setState
 в функции onSelect
@@ -77,9 +81,42 @@ Column(
   ],
 ),
 ```
+#### НОВОЕ
+##Вертикальные свитчеры
+
+Параметр direction этой библиотеки отвечает за направление движения свитчера.
+Просто добавьте ***direction: Axis.vertical*** к вашему виджету:
+
+```
+SlideSwitcher(
+  children: [
+    Text('First'),
+    Text('Second'),
+  ],
+  onSelect: (index) {},
+  containerHeight: 350,
+  containerWight: 40,
+  direction: Axis.vertical
+),
+```
+
+##Пустые свитчеры
+
+Если вам необходим свитчер с двумя children, для определения включения/выключения чего либо, тогда
+добавьте пустые контейнеры в параметры children:
+
+```
+SlideSwitcher(
+  children: [
+    Container(),
+    Container(),
+  ],
+  onSelect: (index) {},
+  containerHeight: 30,
+  containerWight: 60,
+),
+```
+
+![](.github/switch_on.png)
 
 [Google форма для пожеланий и предложений по пакету](https://forms.gle/3Hghayy4yTnj1mjt7)
-
-
-//////НОВОЕ:
-Если хотите пустоту, ебаните контейнеры
