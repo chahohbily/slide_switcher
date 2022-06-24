@@ -6,7 +6,7 @@
 
 Here are some examples of the library's features:
 
-![](.github/switchers_example.gif) ![](.github/switchers_example.gif)
+![](.github/switchers_example.gif)
 
 ***The description of the library is only valid for its latest version***
 
@@ -31,6 +31,8 @@ The library lets you change the style of containers and sliders using the fields
 | containerBorderRadius | Container corner rounding radius |
 | containerColor | Container fill color / grey by default |
 | indents | Indents between the container and sliders (the same on all sides) / 0 by default |
+| direction             | Defining the direction of the slider swipe |
+| containerBoxShadow    | A shadow cast by a box |
 
 ## Creating your own SlideSwitcher
 
@@ -53,6 +55,8 @@ SlideSwitcher(
   containerWight: 350,
 ),
 ```
+
+***Make sure that the containerHeight and containerWight parameters match the swipe movements, otherwise it's possible that the sliders will exceed the container boundaries***
 
 To change the state of the screen it is recommended to create a variable storing the index of the current slider and call its setState
 in the onSelect function
@@ -81,5 +85,43 @@ Column(
   ],
 ),
 ```
+
+#### NEW
+##Vertical Switchers.
+
+The direction parameter of this library is responsible for the direction of the switch's movement.
+Just add ***direction: Axis.vertical*** to your widget:
+
+```
+SlideSwitcher(
+  children: [
+    Text('First'),
+    Text('Second'),
+  ],
+  onSelect: (index) {},
+  containerHeight: 350,
+  containerWight: 40,
+  direction: Axis.vertical
+),
+```
+
+##Empty Switchers
+
+If you need a switcher with two children to define whether something is on or off, then
+add empty containers to the children parameters:
+
+```
+SlideSwitcher(
+  children: [
+    Container(),
+    Container(),
+  ],
+  onSelect: (index) {},
+  containerHeight: 30,
+  containerWight: 60,
+),
+```
+
+![](.github/container_sliders.png)
 
 [Google form for wishes and suggestions for the package](https://forms.gle/3Hghayy4yTnj1mjt7)
