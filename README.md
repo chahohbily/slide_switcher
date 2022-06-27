@@ -85,12 +85,17 @@ Column(
 ),
 ```
 
-## Errors that occur when using SlideSwitcher:
+## List of exceptions for cases that are not supported by the library:
 
-| Errors |
+| List of exceptions |
 | :------------|
 | All widgets from the list of "children" do not fit into the given container size |
 | The "isAllContainerTap" parameter can be "true" only when "children" length is 2 |
+
+*The first error from the table occurs when the smallest side of the container*
+***(determined by the direction of the swipe)***
+*Multiplied by the length of the "children" by half is greater than the largest side of the container.*
+*Only occurs when the borders of the container are maximum rounded*
 
 # NEW
 ## Vertical Switchers.
