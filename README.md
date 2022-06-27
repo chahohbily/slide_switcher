@@ -88,7 +88,7 @@ Column(
 ## Errors that occur when using SlideSwitcher:
 
 | Errors |
-| ------------:|
+| :------------|
 | All widgets from the list of "children" do not fit into the given container size |
 | The "isAllContainerTap" parameter can be "true" only when "children" length is 2 |
 
