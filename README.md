@@ -8,8 +8,6 @@ Here are some examples of the library's features:
 
 ![](.github/switchers_example.gif)
 
-***The description of the library is only valid for its latest version***
-
 ## First I suggest you get familiar with what container and sliders are in the library
 
 ![](.github/container_sliders.png)
@@ -31,8 +29,9 @@ The library lets you change the style of containers and sliders using the fields
 | containerBorderRadius | Container corner rounding radius |
 | containerColor | Container fill color / grey by default |
 | indents | Indents between the container and sliders (the same on all sides) / 0 by default |
-| direction             | Defining the direction of the slider swipe |
-| containerBoxShadow    | A shadow cast by a box |
+| direction             | Defining the direction of the slider swipe / horizontal by default|
+| isAllContainerTap     | A shadow cast by a box |
+| containerBoxShadow    | Ability to tap on the current slider and change its index to the opposite (available only for 2 children) / false by default |
 
 ## Creating your own SlideSwitcher
 
@@ -86,6 +85,13 @@ Column(
 ),
 ```
 
+## Errors that occur when using SlideSwitcher:
+
+| Errors |
+| ------------:|
+| All widgets from the list of "children" do not fit into the given container size |
+| The "isAllContainerTap" parameter can be "true" only when "children" length is 2 |
+
 # NEW
 ## Vertical Switchers.
 
@@ -109,8 +115,8 @@ SlideSwitcher(
 
 ![](.github/switch_on.png)
 
-If you need a switcher with two children to define whether something is on or off, then
-add empty containers to the children parameters:
+If you need a switch with two children to determine whether to turn something on or off, then
+add empty containers to children parameters and parameter ***isAllContainerTap: true***:
 
 ```
 SlideSwitcher(
@@ -119,6 +125,7 @@ SlideSwitcher(
     Container(),
   ],
   onSelect: (index) {},
+  isAllContainerTap: true,
   containerHeight: 30,
   containerWight: 60,
 ),

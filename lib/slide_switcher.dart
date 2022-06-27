@@ -42,6 +42,9 @@ class SlideSwitcher extends StatefulWidget {
   ///A shadow cast by a box
   final List<BoxShadow> containerBoxShadow;
 
+  ///Ability to tap on the current slider and change its index to the opposite (available only for 2 children)
+  final bool isAllContainerTap;
+
   ///A class for creating sliders
   const SlideSwitcher({
     Key? key,
@@ -58,6 +61,7 @@ class SlideSwitcher extends StatefulWidget {
     this.containerBorderRadius = 1000,
     this.direction = Axis.horizontal,
     this.containerBoxShadow = const [],
+    this.isAllContainerTap = false,
   }) : super(key: key);
 
   @override
@@ -71,8 +75,10 @@ class _SlideSwitcherState extends State<SlideSwitcher>
   late final double slidersShortSide;
   late final double containerBorderHeight;
   late final double containerBorderWight;
+  late final bool verticalBadSize;
+  late final bool horizontalBadSize;
   int index = 0;
-  int lastIndex = 0;
+  int lastIndex = -1;
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 250),
@@ -92,11 +98,26 @@ class _SlideSwitcherState extends State<SlideSwitcher>
 
   @override
   void initState() {
+    verticalBadSize = widget.direction == Axis.vertical &&
+            widget.containerHeight <
+                widget.containerWight * widget.children.length
+        ? true
+        : false;
+    horizontalBadSize = widget.direction == Axis.horizontal &&
+            widget.containerHeight * widget.children.length >
+                widget.containerWight
+        ? true
+        : false;
+
     containerBorderHeight =
         widget.containerBorder.top.width + widget.containerBorder.bottom.width;
 
     containerBorderWight =
         widget.containerBorder.left.width + widget.containerBorder.right.width;
+
+    slidersShortSide = widget.direction == Axis.horizontal
+        ? widget.containerHeight - widget.indents * 2 - containerBorderHeight
+        : widget.containerWight - widget.indents * 2 - containerBorderWight;
 
     if (widget.indents != 0) {
       sliderBorderRadius =
@@ -122,16 +143,12 @@ class _SlideSwitcherState extends State<SlideSwitcher>
       sliderBorderRadius = (widget.containerHeight - containerBorderWight) *
           (widget.containerBorderRadius / widget.containerHeight);
     }
-
-    slidersShortSide = widget.direction == Axis.horizontal
-        ? widget.containerHeight - widget.indents * 2 - containerBorderHeight
-        : widget.containerWight - widget.indents * 2 - containerBorderWight;
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (lastIndex == -1) checkForExceptions();
     return Container(
       height: widget.children.isEmpty ? 0 : widget.containerHeight,
       width: widget.children.isEmpty ? 0 : widget.containerWight,
@@ -185,43 +202,36 @@ class _SlideSwitcherState extends State<SlideSwitcher>
               direction: widget.direction,
               children: List.generate(
                 widget.children.length,
-                (rowIndex) => GestureDetector(
+                (slidersIndex) => GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
-                    lastIndex = index;
-                    index = rowIndex;
-                    setState(() {});
-                    widget.onSelect(index);
-                    if (widget.children.length == 2) {
-                      index == 1
-                          ? _controller.forward()
-                          : _controller.reverse();
-                    } else {
-                      if (widget.direction == Axis.horizontal) {
-                        offsetAnimation = Tween<Offset>(
-                          begin: Offset(lastIndex.toDouble(), 0.0),
-                          end: Offset(index.toDouble(), 0.0),
-                        ).animate(
-                          CurvedAnimation(
-                            parent: _controller,
-                            curve: Curves.linear,
-                          ),
-                        );
-                      } else {
-                        offsetAnimation = Tween<Offset>(
-                          begin: Offset(0.0, lastIndex.toDouble()),
-                          end: Offset(0.0, index.toDouble()),
-                        ).animate(
-                          CurvedAnimation(
-                            parent: _controller,
-                            curve: Curves.linear,
-                          ),
-                        );
-                      }
-                      _controller.reset();
-                      _controller.forward();
-                    }
+                    slidersOnTap(
+                        widget.isAllContainerTap && widget.children.length == 2
+                            ? 1 - index
+                            : slidersIndex);
                   },
+                  onHorizontalDragEnd: widget.direction == Axis.horizontal
+                      ? (details) {
+                          if (details.primaryVelocity! > 0 &&
+                              index != widget.children.length - 1) {
+                            slidersOnTap(index + 1);
+                          }
+                          if (details.primaryVelocity! < 0 && index != 0) {
+                            slidersOnTap(index - 1);
+                          }
+                        }
+                      : null,
+                  onVerticalDragEnd: widget.direction == Axis.vertical
+                      ? (details) {
+                          if (details.primaryVelocity! > 0 &&
+                              index != widget.children.length - 1) {
+                            slidersOnTap(index + 1);
+                          }
+                          if (details.primaryVelocity! < 0 && index != 0) {
+                            slidersOnTap(index - 1);
+                          }
+                        }
+                      : null,
                   child: SizedBox(
                     height: widget.direction == Axis.vertical
                         ? slidersLongSide
@@ -231,7 +241,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
                         : slidersShortSide,
                     child: SizedBox(
                       child: Center(
-                        child: widget.children[rowIndex],
+                        child: widget.children[slidersIndex],
                       ),
                     ),
                   ),
@@ -245,27 +255,73 @@ class _SlideSwitcherState extends State<SlideSwitcher>
   }
 
   BorderRadius makingBorder(int index) {
-    bool verticalBadSize = widget.direction == Axis.vertical &&
-            widget.containerHeight < widget.containerWight * 2
-        ? true
-        : false;
-    bool horizontalBadSize = widget.direction == Axis.horizontal &&
-            widget.containerHeight * 2 > widget.containerWight
-        ? true
-        : false;
     return BorderRadius.only(
-      bottomLeft: index == 0 && verticalBadSize || index == widget.children.length - 1 && horizontalBadSize
+      bottomLeft: index == 0 && verticalBadSize ||
+              index == widget.children.length - 1 && horizontalBadSize
           ? Radius.zero
           : Radius.circular(sliderBorderRadius),
       bottomRight: index == 0 && (verticalBadSize || horizontalBadSize)
           ? Radius.zero
           : Radius.circular(sliderBorderRadius),
-      topLeft: index == widget.children.length - 1 && verticalBadSize || index == widget.children.length - 1 && horizontalBadSize
+      topLeft: index == widget.children.length - 1 && verticalBadSize ||
+              index == widget.children.length - 1 && horizontalBadSize
           ? Radius.zero
           : Radius.circular(sliderBorderRadius),
-      topRight: index == widget.children.length - 1 && verticalBadSize || index == 0 && horizontalBadSize
+      topRight: index == widget.children.length - 1 && verticalBadSize ||
+              index == 0 && horizontalBadSize
           ? Radius.zero
           : Radius.circular(sliderBorderRadius),
     );
+  }
+
+  void slidersOnTap(int slidersIndex) {
+    lastIndex = index;
+    index = slidersIndex;
+    setState(() {});
+    widget.onSelect(index);
+    if (widget.children.length == 2) {
+      index == 1 ? _controller.forward() : _controller.reverse();
+    } else {
+      if (widget.direction == Axis.horizontal) {
+        offsetAnimation = Tween<Offset>(
+          begin: Offset(lastIndex.toDouble(), 0.0),
+          end: Offset(index.toDouble(), 0.0),
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.linear,
+          ),
+        );
+      } else {
+        offsetAnimation = Tween<Offset>(
+          begin: Offset(0.0, lastIndex.toDouble()),
+          end: Offset(0.0, index.toDouble()),
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.linear,
+          ),
+        );
+      }
+      _controller.reset();
+      _controller.forward();
+    }
+  }
+
+  void checkForExceptions() {
+    if (widget.isAllContainerTap && widget.children.length != 2) {
+      debugPrint(
+          '\x1B[31mThe "isAllContainerTap" parameter can be "true" only when "children" length is 2\nRemove "isAllContainerTap" or make 2 "children"\x1B[0m');
+      throw 'The "isAllContainerTap" parameter can be "true" only when "children" length is 2\nRemove "isAllContainerTap" or make 2 "children"';
+    }
+    if (slidersShortSide * widget.children.length * 0.5 >
+            slidersLongSide * widget.children.length &&
+        widget.containerBorderRadius * 2.1 > slidersShortSide &&
+        widget.children.length != 2) {
+      debugPrint(
+          '\x1B[31mAll widgets from the list of "children" do not fit into the given container size.\nTry applying other container sizes\x1B[0m');
+      throw 'All widgets from the list of "children" do not fit into the given container size.\nTry applying other container sizes';
+    }
+    lastIndex = 0;
   }
 }

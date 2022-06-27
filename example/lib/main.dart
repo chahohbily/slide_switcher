@@ -29,6 +29,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int switcherIndex2 = 0;
   int switcherIndex3 = 0;
   int switcherIndex4 = 0;
+  int switcherIndex5 = 0;
+  int switcherIndex6 = 0;
+  int switcherIndex7 = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 containerHeight: 30,
                 containerWight: 60,
+                isAllContainerTap: true,
                 onSelect: (int index) => setState(() => switcherIndex1 = index),
                 indents: 5,
                 containerColor:
@@ -69,8 +73,54 @@ class _MyHomePageState extends State<MyHomePage> {
                           : FontWeight.w400),
                 ),
               ],
-              onSelect: (index) => setState(() => switcherIndex2 = index),
+              onSelect: (int index) => setState(() => switcherIndex2 = index),
               containerHeight: 40,
+              containerWight: 350,
+            ),
+            const SizedBox(height: 20),
+            SlideSwitcher(
+              children: const [
+                Text(
+                  'First',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff714F43),
+                  ),
+                ),
+                Text(
+                  'Second',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff714F43),
+                  ),
+                ),
+                Text(
+                  'Third',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff714F43),
+                  ),
+                ),
+                Text(
+                  'Forth',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff714F43),
+                  ),
+                ),
+              ],
+              onSelect: (int index) => setState(() => switcherIndex3 = index),
+              containerBorderRadius: 0,
+              indents: 10,
+              containerBorder: Border.all(
+                width: 3,
+                color: const Color(0xffFFFFE3),
+              ),
+              containerColor: const Color(0xffE1CCB9).withOpacity(0.8),
+              slidersColors: const [
+                Color(0xffFFFFE3),
+              ],
+              containerHeight: 50,
               containerWight: 350,
             ),
             const SizedBox(height: 20),
@@ -79,50 +129,59 @@ class _MyHomePageState extends State<MyHomePage> {
                 Text(
                   'First',
                   style: TextStyle(
-                      fontWeight: switcherIndex3 == 0
-                          ? FontWeight.w600
-                          : FontWeight.w400),
+                      fontSize: 15,
+                      color: switcherIndex4 == 0
+                          ? Colors.white.withOpacity(0.9)
+                          : Colors.grey),
                 ),
                 Text(
                   'Second',
                   style: TextStyle(
-                      fontWeight: switcherIndex3 == 1
-                          ? FontWeight.w600
-                          : FontWeight.w400),
+                      fontSize: 15,
+                      color: switcherIndex4 == 1
+                          ? Colors.white.withOpacity(0.9)
+                          : Colors.grey),
                 ),
                 Text(
                   'Third',
                   style: TextStyle(
-                      fontWeight: switcherIndex3 == 2
-                          ? FontWeight.w600
-                          : FontWeight.w400),
-                ),
-                Text(
-                  'Forth',
-                  style: TextStyle(
-                      fontWeight: switcherIndex3 == 3
-                          ? FontWeight.w600
-                          : FontWeight.w400),
+                      fontSize: 15,
+                      color: switcherIndex4 == 2
+                          ? Colors.white.withOpacity(0.9)
+                          : Colors.grey),
                 ),
               ],
-              onSelect: (int index) => setState(() => switcherIndex3 = index),
-              containerBorderRadius: 0,
-              indents: 10,
-              containerBorder: Border.all(
-                width: 3,
-                color: const Color.fromRGBO(232, 99, 60, 1.0),
-              ),
-              containerColor: Colors.white,
-              slidersColors: const [
-                const Color.fromRGBO(232, 99, 60, 1.0),
+              onSelect: (int index) => setState(() => switcherIndex4 = index),
+              containerColor: Colors.transparent,
+              containerBorder: Border.all(color: Colors.white),
+              slidersGradients: const [
+                LinearGradient(
+                  colors: [
+                    Color.fromRGBO(47, 105, 255, 1),
+                    Color.fromRGBO(188, 47, 255, 1),
+                  ],
+                ),
+                LinearGradient(
+                  colors: [
+                    Color.fromRGBO(47, 105, 255, 1),
+                    Color.fromRGBO(0, 192, 169, 1),
+                  ],
+                ),
+                LinearGradient(
+                  colors: [
+                    Color.fromRGBO(255, 105, 105, 1),
+                    Color.fromRGBO(255, 62, 62, 1),
+                  ],
+                ),
               ],
+              indents: 9,
               containerHeight: 50,
-              containerWight: 350,
+              containerWight: 315,
             ),
             const SizedBox(height: 20),
             Row(
               children: [
-                const SizedBox(width: 30),
+                const SizedBox(width: 65),
                 SlideSwitcher(
                   children: const [
                     Icon(
@@ -134,12 +193,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.white,
                     ),
                   ],
-                  onSelect: (index) {},
+                  onSelect: (int index) =>
+                      setState(() => switcherIndex5 = index),
                   direction: Axis.vertical,
                   containerColor: Colors.teal.withOpacity(0.5),
                   slidersColors: const [Colors.teal],
                   containerHeight: 70,
-                  containerWight: 100,
+                  containerWight: 90,
                 ),
                 const SizedBox(width: 20),
                 SlideSwitcher(
@@ -180,13 +240,43 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ],
-                  onSelect: (index) {},
+                  onSelect: (int index) =>
+                      setState(() => switcherIndex6 = index),
                   slidersColors: const [Colors.white],
                   containerHeight: 320,
                   containerWight: 60,
                   indents: 4,
                   direction: Axis.vertical,
                   containerColor: const Color.fromRGBO(140, 176, 254, 1),
+                ),
+                const SizedBox(width: 20),
+                SlideSwitcher(
+                  children: const [
+                    Text(
+                      'F',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'S',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                  direction: Axis.vertical,
+                  containerColor: Colors.purple,
+                  slidersColors: [Colors.transparent],
+                  slidersBorder: Border.all(color: Colors.white, width: 2),
+                  containerBorder: Border.all(color: Colors.white, width: 2),
+                  containerHeight: 300,
+                  containerWight: 40,
+                  indents: 5,
+                  onSelect: (int index) =>
+                      setState(() => switcherIndex7 = index),
                 ),
               ],
             ),
