@@ -2,7 +2,7 @@
 
 * Adding exception handling for cases that are not supported by the library
 * Added the ability to click on the whole container if it contains 2 children (isAllContainerTap parameter)
-* Editing the error of incorrect sliders size calculation
+* Editing the exceptions of incorrect sliders size calculation
 
 ## 1.1.0
 

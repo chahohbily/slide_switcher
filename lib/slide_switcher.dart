@@ -71,12 +71,13 @@ class SlideSwitcher extends StatefulWidget {
 class _SlideSwitcherState extends State<SlideSwitcher>
     with SingleTickerProviderStateMixin {
   late final double sliderBorderRadius;
-  late final double slidersLongSide;
-  late final double slidersShortSide;
+  late final double slidersHeight;
+  late final double slidersWight;
   late final double containerBorderHeight;
   late final double containerBorderWight;
   late final bool verticalBadSize;
   late final bool horizontalBadSize;
+  late final EdgeInsets padding;
   int index = 0;
   int lastIndex = -1;
 
@@ -99,15 +100,10 @@ class _SlideSwitcherState extends State<SlideSwitcher>
   @override
   void initState() {
     verticalBadSize = widget.direction == Axis.vertical &&
-            widget.containerHeight <
-                widget.containerWight * widget.children.length
-        ? true
-        : false;
+        widget.containerHeight < widget.containerWight * widget.children.length;
+
     horizontalBadSize = widget.direction == Axis.horizontal &&
-            widget.containerHeight * widget.children.length >
-                widget.containerWight
-        ? true
-        : false;
+        widget.containerHeight * widget.children.length > widget.containerWight;
 
     containerBorderHeight =
         widget.containerBorder.top.width + widget.containerBorder.bottom.width;
@@ -115,40 +111,32 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     containerBorderWight =
         widget.containerBorder.left.width + widget.containerBorder.right.width;
 
-    slidersShortSide = widget.direction == Axis.horizontal
-        ? widget.containerHeight - widget.indents * 2 - containerBorderHeight
-        : widget.containerWight - widget.indents * 2 - containerBorderWight;
+    sliderBorderRadius =
+        (widget.containerHeight - widget.indents - containerBorderWight) *
+            (widget.containerBorderRadius / widget.containerHeight);
 
-    if (widget.indents != 0) {
-      sliderBorderRadius =
-          (widget.containerHeight - widget.indents - containerBorderWight) *
-              (widget.containerBorderRadius / widget.containerHeight);
-
-      slidersLongSide = widget.direction == Axis.horizontal
-          ? (widget.containerWight -
-                  widget.indents * 2 -
-                  containerBorderWight) /
-              widget.children.length
-          : (widget.containerHeight -
-                  widget.indents * 2 -
-                  containerBorderHeight) /
+    if (widget.direction == Axis.horizontal) {
+      slidersHeight =
+          widget.containerHeight - widget.indents * 2 - containerBorderHeight;
+      padding = EdgeInsets.symmetric(horizontal: widget.indents);
+      slidersWight =
+          (widget.containerWight - widget.indents * 2 - containerBorderWight) /
               widget.children.length;
     } else {
-      slidersLongSide = widget.direction == Axis.horizontal
-          ? (widget.containerWight - containerBorderWight) /
-              widget.children.length
-          : (widget.containerHeight - containerBorderHeight) /
-              widget.children.length;
-
-      sliderBorderRadius = (widget.containerHeight - containerBorderWight) *
-          (widget.containerBorderRadius / widget.containerHeight);
+      slidersWight =
+          widget.containerWight - widget.indents * 2 - containerBorderWight;
+      padding = EdgeInsets.symmetric(vertical: widget.indents);
+      slidersHeight = (widget.containerHeight -
+              widget.indents * 2 -
+              containerBorderHeight) /
+          widget.children.length;
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (lastIndex == -1) checkForExceptions();
+    if (lastIndex == -1) _checkForExceptions();
     return Container(
       height: widget.children.isEmpty ? 0 : widget.containerHeight,
       width: widget.children.isEmpty ? 0 : widget.containerWight,
@@ -164,40 +152,34 @@ class _SlideSwitcherState extends State<SlideSwitcher>
             : Alignment.topCenter,
         children: [
           Padding(
-            padding: widget.direction == Axis.horizontal
-                ? EdgeInsets.symmetric(horizontal: widget.indents)
-                : EdgeInsets.symmetric(vertical: widget.indents),
+            padding: padding,
             child: SlideTransition(
               position: offsetAnimation,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                height: widget.direction == Axis.vertical
-                    ? slidersLongSide
-                    : slidersShortSide,
-                width: widget.direction == Axis.horizontal
-                    ? slidersLongSide
-                    : slidersShortSide,
+                height: slidersHeight,
+                width: slidersWight,
                 decoration: BoxDecoration(
                   border: widget.slidersBorder,
-                  borderRadius: makingBorder(index),
+                  borderRadius: _makingBorder(index),
                   color: widget.slidersGradients.isEmpty
-                      ? index + 1 > widget.slidersColors.length
-                          ? widget.slidersColors[0]
-                          : widget.slidersColors[index]
+                      ? widget.slidersColors[
+                          index + 1 > widget.slidersGradients.length
+                              ? 0
+                              : index]
                       : null,
                   gradient: widget.slidersGradients.isNotEmpty
-                      ? index + 1 > widget.slidersGradients.length
-                          ? widget.slidersGradients[0]
-                          : widget.slidersGradients[index]
+                      ? widget.slidersGradients[
+                          index + 1 > widget.slidersGradients.length
+                              ? 0
+                              : index]
                       : null,
                 ),
               ),
             ),
           ),
           Padding(
-            padding: widget.direction == Axis.horizontal
-                ? EdgeInsets.symmetric(horizontal: widget.indents)
-                : EdgeInsets.symmetric(vertical: widget.indents),
+            padding: padding,
             child: Flex(
               direction: widget.direction,
               children: List.generate(
@@ -205,40 +187,25 @@ class _SlideSwitcherState extends State<SlideSwitcher>
                 (slidersIndex) => GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
-                    slidersOnTap(
-                        widget.isAllContainerTap && widget.children.length == 2
-                            ? 1 - index
-                            : slidersIndex);
+                    _slidersOnTap(
+                      widget.isAllContainerTap && widget.children.length == 2
+                          ? 1 - index
+                          : slidersIndex,
+                    );
                   },
                   onHorizontalDragEnd: widget.direction == Axis.horizontal
                       ? (details) {
-                          if (details.primaryVelocity! > 0 &&
-                              index != widget.children.length - 1) {
-                            slidersOnTap(index + 1);
-                          }
-                          if (details.primaryVelocity! < 0 && index != 0) {
-                            slidersOnTap(index - 1);
-                          }
+                          _slidersOnSwipe(details);
                         }
                       : null,
                   onVerticalDragEnd: widget.direction == Axis.vertical
                       ? (details) {
-                          if (details.primaryVelocity! > 0 &&
-                              index != widget.children.length - 1) {
-                            slidersOnTap(index + 1);
-                          }
-                          if (details.primaryVelocity! < 0 && index != 0) {
-                            slidersOnTap(index - 1);
-                          }
+                          _slidersOnSwipe(details);
                         }
                       : null,
                   child: SizedBox(
-                    height: widget.direction == Axis.vertical
-                        ? slidersLongSide
-                        : slidersShortSide,
-                    width: widget.direction == Axis.horizontal
-                        ? slidersLongSide
-                        : slidersShortSide,
+                    height: slidersHeight,
+                    width: slidersWight,
                     child: SizedBox(
                       child: Center(
                         child: widget.children[slidersIndex],
@@ -254,7 +221,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     );
   }
 
-  BorderRadius makingBorder(int index) {
+  BorderRadius _makingBorder(int index) {
     return BorderRadius.only(
       bottomLeft: index == 0 && verticalBadSize ||
               index == widget.children.length - 1 && horizontalBadSize
@@ -274,7 +241,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     );
   }
 
-  void slidersOnTap(int slidersIndex) {
+  void _slidersOnTap(int slidersIndex) {
     lastIndex = index;
     index = slidersIndex;
     setState(() {});
@@ -308,15 +275,30 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     }
   }
 
-  void checkForExceptions() {
+  void _slidersOnSwipe(DragEndDetails details) {
+    if (details.primaryVelocity! > 0 && index != widget.children.length - 1) {
+      _slidersOnTap(index + 1);
+    }
+    if (details.primaryVelocity! < 0 && index != 0) {
+      _slidersOnTap(index - 1);
+    }
+  }
+
+  void _checkForExceptions() {
     if (widget.isAllContainerTap && widget.children.length != 2) {
       debugPrint(
           '\x1B[31mThe "isAllContainerTap" parameter can be "true" only when "children" length is 2\nRemove "isAllContainerTap" or make 2 "children"\x1B[0m');
       throw 'The "isAllContainerTap" parameter can be "true" only when "children" length is 2\nRemove "isAllContainerTap" or make 2 "children"';
     }
-    if (slidersShortSide * widget.children.length * 0.5 >
-            slidersLongSide * widget.children.length &&
-        widget.containerBorderRadius * 2.1 > slidersShortSide &&
+
+    double shortSide = widget.containerHeight > widget.containerWight
+        ? widget.containerWight
+        : widget.containerHeight;
+    double longSide = widget.containerHeight > widget.containerWight
+        ? widget.containerHeight
+        : widget.containerWight;
+    if (shortSide * widget.children.length * 0.5 > longSide &&
+        widget.containerBorderRadius * 2 > shortSide &&
         widget.children.length != 2) {
       debugPrint(
           '\x1B[31mAll widgets from the list of "children" do not fit into the given container size.\nTry applying other container sizes\x1B[0m');

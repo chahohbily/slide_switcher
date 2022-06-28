@@ -36,9 +36,9 @@ The library lets you change the style of containers and sliders using the fields
 ## Creating your own SlideSwitcher
 
 SlideSwitcher is an ordinary widget. In order to create it you have to specify the obligatory parameters:
-children - texts, icons, pictures and any other widgets that will be stored in the sliders;
-onSelect - the function which will be executed during the change of the focused slider;
-containerHeight - container height; containerWight - container width. To customize the widget
+"children" - texts, icons, pictures and any other widgets that will be stored in the sliders;
+"onSelect" - the function which will be executed during the change of the focused slider;
+"containerHeight" - container height; "containerWight" - container width. To customize the widget
 you should use the optional parameters from the table above.
 
 #### Minimum functionality:
@@ -55,10 +55,8 @@ SlideSwitcher(
 ),
 ```
 
-***Make sure that the containerHeight and containerWight parameters match the swipe movements, otherwise it's possible that the sliders will exceed the container boundaries***
-
 To change the state of the screen it is recommended to create a variable storing the index of the current slider and call its setState
-in the onSelect function
+in the "onSelect" function
 
 ```
 int switcherIndex1 = 0;
@@ -94,11 +92,13 @@ Column(
 
 *The first error from the table occurs when the smallest side of the container*
 ***(determined by the direction of the swipe)***
-*Multiplied by the length of the "children" by half is greater than the largest side of the container.*
+*multiplied by the length of the "children" by half is greater than the largest side of the container.*
 *Only occurs when the borders of the container are maximum rounded*
 
 # NEW
 ## Vertical Switchers.
+
+![](.github/vertical_switchers.png)
 
 The direction parameter of this library is responsible for the direction of the switch's movement.
 Just add ***direction: Axis.vertical*** to your widget:
