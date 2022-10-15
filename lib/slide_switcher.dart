@@ -45,6 +45,9 @@ class SlideSwitcher extends StatefulWidget {
   ///Ability to tap on the current slider and change its index to the opposite (available only for 2 children)
   final bool isAllContainerTap;
 
+  ///Initial index of the slider, which is rendering for the first time
+  final int initialIndex;
+
   ///A class for creating sliders
   const SlideSwitcher({
     Key? key,
@@ -62,6 +65,7 @@ class SlideSwitcher extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.containerBoxShadow = const [],
     this.isAllContainerTap = false,
+    this.initialIndex = 0,
   }) : super(key: key);
 
   @override
@@ -78,7 +82,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
   late final bool verticalBadSize;
   late final bool horizontalBadSize;
   late final EdgeInsets padding;
-  int index = 0;
+  late int index;
   int lastIndex = -1;
 
   late final AnimationController _controller = AnimationController(
@@ -86,7 +90,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
     vsync: this,
   );
   late Animation<Offset> offsetAnimation = Tween<Offset>(
-    begin: const Offset(0.0, 0.0),
+    begin: Offset(widget.initialIndex.toDouble(), 0.0),
     end: widget.direction == Axis.horizontal
         ? const Offset(1.0, 0.0)
         : const Offset(0.0, 1.0),
@@ -131,6 +135,7 @@ class _SlideSwitcherState extends State<SlideSwitcher>
               containerBorderHeight) /
           widget.children.length;
     }
+    index = widget.initialIndex;
     super.initState();
   }
 

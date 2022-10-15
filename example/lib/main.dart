@@ -44,35 +44,39 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SlideSwitcher(
-                children: [
-                  Container(),
-                  Container(),
-                ],
-                containerHeight: 30,
-                containerWight: 60,
-                isAllContainerTap: true,
-                onSelect: (int index) => setState(() => switcherIndex1 = index),
-                indents: 5,
-                containerColor:
-                    switcherIndex1 == 0 ? Colors.grey : Colors.indigo.shade300),
+              children: [
+                Container(),
+                Container(),
+              ],
+              containerHeight: 30,
+              containerWight: 60,
+              isAllContainerTap: true,
+              onSelect: (int index) => setState(() => switcherIndex1 = index),
+              indents: 5,
+              containerColor:
+                  switcherIndex1 == 0 ? Colors.grey : Colors.indigo.shade300,
+            ),
             const SizedBox(height: 20),
             SlideSwitcher(
               children: [
                 Text(
                   'First',
                   style: TextStyle(
-                      fontWeight: switcherIndex2 == 0
-                          ? FontWeight.w500
-                          : FontWeight.w400),
+                    fontWeight:
+                        switcherIndex2 == 0 ? FontWeight.w500 : FontWeight.w400,
+                    color: switcherIndex2 == 0 ? Colors.deepOrange : Colors.white,
+                  ),
                 ),
                 Text(
                   'Second',
                   style: TextStyle(
-                      fontWeight: switcherIndex2 == 1
-                          ? FontWeight.w500
-                          : FontWeight.w400),
+                    fontWeight:
+                        switcherIndex2 == 1 ? FontWeight.w500 : FontWeight.w400,
+                    color: switcherIndex2 == 1 ? Colors.deepOrange : Colors.white,
+                  ),
                 ),
               ],
+              containerColor: Colors.deepOrange,
               onSelect: (int index) => setState(() => switcherIndex2 = index),
               containerHeight: 40,
               containerWight: 350,
@@ -109,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ],
+              initialIndex: 2,
               onSelect: (int index) => setState(() => switcherIndex3 = index),
               containerBorderRadius: 0,
               indents: 10,

@@ -20,7 +20,7 @@ The library lets you change the style of containers and sliders using the fields
 
 | Fields           | Description                                   |
 | ---------------- |:---------------------------------------------:|
-| slidersChild     | Widgets that placed inside sliders / required |
+| children     | Widgets that placed inside sliders / required |
 | onSelect | The function takes an index variable that changes depending on the index of the current slider / required|
 | containerHeight | Container height / required |
 | containerWight | Container width / required |
@@ -34,6 +34,7 @@ The library lets you change the style of containers and sliders using the fields
 | direction             | Defining the direction of the slider swipe / horizontal by default|
 | isAllContainerTap     | A shadow cast by a box |
 | containerBoxShadow    | Ability to tap on the current slider and change its index to the opposite (available only for 2 children) / false by default |
+| initialIndex     | Initial index of the slider, which is rendering for the first time |
 
 ## Creating your own SlideSwitcher
 
