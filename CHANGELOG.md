@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Adding initial index parameter
+
 ## 1.1.1
 
 * Adding exception handling for cases that are not supported by the library
