@@ -64,7 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     fontWeight:
                         switcherIndex2 == 0 ? FontWeight.w500 : FontWeight.w400,
-                    color: switcherIndex2 == 0 ? Colors.deepOrange : Colors.white,
+                    color:
+                        switcherIndex2 == 0 ? Colors.deepOrange : Colors.white,
                   ),
                 ),
                 Text(
@@ -72,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     fontWeight:
                         switcherIndex2 == 1 ? FontWeight.w500 : FontWeight.w400,
-                    color: switcherIndex2 == 1 ? Colors.deepOrange : Colors.white,
+                    color:
+                        switcherIndex2 == 1 ? Colors.deepOrange : Colors.white,
                   ),
                 ),
               ],
